@@ -66,4 +66,18 @@ public class MemberService {
           return null;
       }
     }
+
+    public MemberDTO findByMemberEmail(String loginEmail) {
+      Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(loginEmail);
+        if (optionalMemberEntity.isPresent()){
+            return MemberDTO.toDTO(optionalMemberEntity.get());
+        }else {
+            return null;
+        }
+    }
+
+    public void update(MemberDTO memberDTO) {  // 아이디값이 없으면 insert 를 날리고 있으면 update 쿼리를 날림
+        MemberEntity updateEntity = MemberEntity.toUpdateEntity(memberDTO);
+        memberRepository.save(updateEntity);
+    }
 }

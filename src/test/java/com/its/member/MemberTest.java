@@ -2,6 +2,7 @@ package com.its.member;
 
 import com.its.member.dto.MemberDTO;
 import com.its.member.service.MemberService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,4 +40,86 @@ public class MemberTest {
          // 테스트로 이메일을 확인 자동적으로 결과로 확인
 
     }
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    @DisplayName("로그인테스트")
+    public void loginTest(){
+        //1. 회원가입
+        String loginEmail = "loginEmail";
+        String loginPassword = "loginPassword";
+
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberEmail(loginEmail);
+        memberDTO.setMemberPassword(loginPassword);
+        memberDTO.setMemberName("loginName");
+        memberDTO.setMemberAge(22);
+        memberDTO.setMemberPhone("010-1111-1111");
+        memberService.save(memberDTO);
+        // save 매서드를 복사해서
+        //2, 로그인 수행
+        MemberDTO loginDTO = new MemberDTO();
+        loginDTO.setMemberEmail(loginEmail);     // dto에 이메일과 비밀번호가 있으니까 dto로 이용
+        loginDTO.setMemberPassword(loginPassword);
+        MemberDTO loginResult = memberService.login(loginDTO);
+        //3. 로그인 결과가 null 이 아니면 테스트 통과
+        assertThat(loginResult).isNotNull();
+
+    }
+
+
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    @DisplayName("업데이트 테스트")
+    public void updateTest() {
+
+        MemberDTO memberDTO = newMember(); // 매서드를 호출
+        Long savedId = memberService.save(memberDTO); // 가입 절차
+
+        // 수정용 MemberDTO
+        memberDTO.setId(savedId);    // 수정하기 위해 id값을 셋팅
+        memberDTO.setMemberName("수정이름"); // 수정하고 싶은 값을 셋팅
+
+        // 수정처리
+        memberService.update(memberDTO);
+
+        // DB에서 조회한 이름이 수정할 떄 사용한 이름과 같은지 확인
+        MemberDTO memberDB = memberService.findById(savedId); // 다시 조회
+        assertThat(memberDB.getMemberName()).isEqualTo(memberDTO.getMemberName());
+
+
+    }
+
+//
+//        String loginEmail = "loginEmail";
+//        String loginPassword = "loginPassword";
+//
+//        MemberDTO memberDTO = new MemberDTO();
+//        memberDTO.setMemberEmail(memberDTO.getMemberEmail());
+//        memberDTO.setMemberPassword(memberDTO.getMemberPassword());
+//        memberDTO.setMemberName("loginName");
+//        memberDTO.setMemberAge(22);
+//        memberDTO.setMemberPhone("010-1111-1111");
+//        memberService.update(memberDTO);
+//
+//        MemberDTO updateDTO = new MemberDTO();
+//        updateDTO.setMemberEmail();
+
+//        MemberDTO updateDTO = new MemberDTO();
+//    updateDTO.setMemberEmail(Req.getMemberEmail());
+//    updateDTO.setMemberPassword(memberDTO.getMemberPassword());
+//     MemberDTO updateResult = memberService.update(memberDTO);
+//        assertThat(updateResult)
+
+        public MemberDTO newMember(){
+            MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setMemberEmail("testEmail");
+            memberDTO.setMemberPassword("testPassword");
+            memberDTO.setMemberName("testName");
+            memberDTO.setMemberAge(22);
+            memberDTO.setMemberPhone("010-1111-1111");
+
+            return memberDTO;
+        }
 }

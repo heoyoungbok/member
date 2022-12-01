@@ -1,6 +1,6 @@
 # server port 번호 설정
 server:
-  port: 8080
+  port: 8081
 
 # data base 연동 설정
 spring:
