@@ -80,4 +80,29 @@ public class MemberService {
         MemberEntity updateEntity = MemberEntity.toUpdateEntity(memberDTO);
         memberRepository.save(updateEntity);
     }
+
+    public void delete(Long id){
+        memberRepository.deleteById(id);
+    }
+
+    public String emailDuplicateCheck(String memberEmail) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
+
+            if (optionalMemberEntity.isEmpty()){  // 조회했을 떄 비어있으면 사용가능
+                return "ok";
+            }else {
+                return null;
+            }
+        }
+
+
+
+
 }
+//           if (byMemberEmail.isEmpty()){
+//               return "ok";
+//           }else {
+//               return "no";
+//           }
+//    }
+

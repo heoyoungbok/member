@@ -122,4 +122,29 @@ public class MemberTest {
 
             return memberDTO;
         }
+
+        @Test
+        @Transactional
+        @Rollback(value = true)
+        @DisplayName("탈퇴 테스트")
+        public void deleteTest(){
+
+        MemberDTO memberDTO = newMember();
+        Long savedId = memberService.save(memberDTO); // 가입
+
+//        memberDTO.setId(savedId);
+
+        memberService.delete(savedId);
+
+//        MemberDTO memberDB =  memberService.findById(savedId);
+////        assertThat(memberDB.getId()).isEqualTo(memberDTO.getId());
+            assertThat(memberService.findById(savedId)).isNull(); // 조회을 하고 데이타가 없으면 ,null
+
+
+
+        }
+
+
+
+
 }
